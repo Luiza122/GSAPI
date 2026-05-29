@@ -19,8 +19,8 @@ A solução proposta é uma plataforma integrada que combina satélite, IoT e dr
 
 | Nome completo | RM |
 |---|---|
-| Luiza Macena Dantas | RM556237 |
 | Fernanda Rocha Menon | RM554673 |
+| Luiza Macena Dantas | RM556237 |
 | Luan Ramos Garcia de Souza | RM558537 |
 | Matheus Ricciotti | RM556930 |
 | Matheus Bortolotto | RM555189 |
