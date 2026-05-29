@@ -61,10 +61,61 @@ app.MapPost("/api/fazendas", async (CriarFazendaRequest r, AgroDbContext db) =>
     return Results.Created($"/api/fazendas/{fazenda.Id}", fazenda);
 });
 
+app.MapPost("/api/fazendas/{fazendaId:int}/talhoes", async (int fazendaId, CriarTalhaoRequest r, AgroDbContext db) =>
+{
+    var fazenda = await db.Fazendas.FindAsync(fazendaId);
+    if (fazenda == null)
+        throw new RecursoNaoEncontradoException($"Fazenda {fazendaId} não encontrada.");
+    
+    var talhao = new Talhao(r.Nome, r.Cultura, r.AreaHectares, r.Latitude, r.Longitude, fazendaId);
+    db.Talhoes.Add(talhao);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/fazendas/{fazendaId}/talhoes/{talhao.Id}", talhao);
+});
+
 app.MapGet("/api/equipamentos", async (AgroDbContext db) =>
 {
     var lista = await db.Equipamentos.AsNoTracking().ToListAsync();
     return Results.Ok(lista.Select(e => new EquipamentoResponse(e.Id, e.Nome, e.Codigo, e.Tipo, e.Status, e.DescreverOperacao())));
+});
+
+app.MapPost("/api/equipamentos/satelites", async (CriarSateliteRequest r, AgroDbContext db) =>
+{
+    var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
+    if (fazenda == null)
+        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
+    
+    var satelite = new Satelite(r.Nome, r.Codigo, r.FazendaId, r.ProvedorImagem, r.RevisitaHoras);
+    db.Equipamentos.Add(satelite);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/equipamentos/satelites/{satelite.Id}", 
+        new EquipamentoResponse(satelite.Id, satelite.Nome, satelite.Codigo, satelite.Tipo, satelite.Status, satelite.DescreverOperacao()));
+});
+
+app.MapPost("/api/equipamentos/drones", async (CriarDroneRequest r, AgroDbContext db) =>
+{
+    var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
+    if (fazenda == null)
+        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
+    
+    var drone = new Drone(r.Nome, r.Codigo, r.FazendaId, r.AutonomiaMinutos, r.RotaPadrao);
+    db.Equipamentos.Add(drone);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/equipamentos/drones/{drone.Id}", 
+        new EquipamentoResponse(drone.Id, drone.Nome, drone.Codigo, drone.Tipo, drone.Status, drone.DescreverOperacao()));
+});
+
+app.MapPost("/api/equipamentos/sensores-iot", async (CriarSensorIotRequest r, AgroDbContext db) =>
+{
+    var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
+    if (fazenda == null)
+        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
+    
+    var sensor = new SensorIot(r.Nome, r.Codigo, r.FazendaId, r.GrandezaMonitorada);
+    db.Equipamentos.Add(sensor);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/equipamentos/sensores-iot/{sensor.Id}", 
+        new EquipamentoResponse(sensor.Id, sensor.Nome, sensor.Codigo, sensor.Tipo, sensor.Status, sensor.DescreverOperacao()));
 });
 
 app.MapPost("/api/monitoramento/leituras-satelite", async (CriarLeituraSateliteRequest r, AgroDbContext db, IAlertaService alertas) =>
