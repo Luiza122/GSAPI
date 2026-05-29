@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using AgroOrbit.Api;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,24 @@ using (var scope = app.Services.CreateScope())
     DbSeeder.Seed(db);
 }
 
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var erro = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+        var status = erro switch
+        {
+            RecursoNaoEncontradoException => 404,
+            RegraNegocioException => 400,
+            FormatException => 400,
+            DbUpdateException => 409,
+            _ => 500
+        };
+        context.Response.StatusCode = status;
+        await context.Response.WriteAsJsonAsync(new { status, mensagem = erro?.Message ?? "Erro interno", horarioUtc = DateTime.UtcNow });
+    });
+});
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapGet("/", () => Results.Redirect("/swagger"));
@@ -36,17 +55,10 @@ app.MapGet("/api/fazendas", async (AgroDbContext db) =>
 
 app.MapPost("/api/fazendas", async (CriarFazendaRequest r, AgroDbContext db) =>
 {
-    try
-    {
-        var fazenda = new Fazenda(r.Nome, r.Proprietario, r.Cidade, r.Estado, r.AreaHectares);
-        db.Fazendas.Add(fazenda);
-        await db.SaveChangesAsync();
-        return Results.Created($"/api/fazendas/{fazenda.Id}", fazenda);
-    }
-    catch (Exception ex)
-    {
-        return Results.BadRequest(new { erro = ex.Message });
-    }
+    var fazenda = new Fazenda(r.Nome, r.Proprietario, r.Cidade, r.Estado, r.AreaHectares);
+    db.Fazendas.Add(fazenda);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/fazendas/{fazenda.Id}", fazenda);
 });
 
 app.MapGet("/api/equipamentos", async (AgroDbContext db) =>
