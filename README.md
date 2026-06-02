@@ -98,25 +98,36 @@ Caso no seu banco local apareça outro ID, substitua no JSON pelo ID exibido no 
 
 ## Endpoints principais
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| GET | `/api/fazendas` | Lista fazendas |
-| POST | `/api/fazendas` | Cria fazenda |
-| POST | `/api/fazendas/{fazendaId}/talhoes` | Cria talhão |
-| GET | `/api/equipamentos` | Lista equipamentos |
-| POST | `/api/equipamentos/satelites` | Cria satélite |
-| POST | `/api/equipamentos/drones` | Cria drone |
-| POST | `/api/equipamentos/sensores-iot` | Cria sensor IoT |
-| POST | `/api/monitoramento/leituras-satelite` | Registra leitura orbital |
-| POST | `/api/monitoramento/leituras-sensor` | Registra leitura IoT |
-| POST | `/api/monitoramento/varreduras-drone` | Registra varredura do drone |
-| GET | `/api/alertas` | Lista alertas |
-| GET | `/api/dashboard/{fazendaId}` | Consulta dashboard |
-| POST | `/api/relatorios/semanal/{fazendaId}` | Gera relatório semanal |
+| Ordem no Swagger | Método | Endpoint | Descrição |
+|---|---|---|---|
+| 1 | GET | `/` | Redireciona para o Swagger |
+| 2 | GET | `/api/fazendas` | Lista fazendas |
+| 3 | POST | `/api/fazendas` | Cria fazenda |
+| 4 | POST | `/api/fazendas/{fazendaId}/talhoes` | Cria talhão |
+| 5 | GET | `/api/equipamentos` | Lista equipamentos |
+| 6 | POST | `/api/equipamentos/satelites` | Cria satélite |
+| 7 | POST | `/api/equipamentos/drones` | Cria drone |
+| 8 | POST | `/api/equipamentos/sensores-iot` | Cria sensor IoT |
+| 9 | POST | `/api/monitoramento/leituras-satelite` | Registra leitura orbital |
+| 10 | POST | `/api/monitoramento/leituras-sensor` | Registra leitura IoT |
+| 11 | POST | `/api/monitoramento/varreduras-drone` | Registra varredura do drone |
+| 12 | GET | `/api/alertas` | Lista alertas |
+| 13 | GET | `/api/dashboard/{fazendaId}` | Consulta dashboard |
+| 14 | POST | `/api/relatorios/semanal/{fazendaId}` | Gera relatório semanal |
 
 ## Como testar no Swagger
 
-### 1. Listar fazendas
+### 1. Abrir raiz da API
+
+Endpoint:
+
+```http
+GET /
+```
+
+Não precisa enviar JSON. Esse endpoint redireciona para a página do Swagger.
+
+### 2. Listar fazendas
 
 Endpoint:
 
@@ -126,7 +137,7 @@ GET /api/fazendas
 
 Não precisa enviar JSON.
 
-### 2. Criar fazenda
+### 3. Criar fazenda
 
 Endpoint:
 
@@ -148,7 +159,7 @@ JSON para enviar:
 
 Não envie `id` nem `criadaEm`, pois esses campos são gerados pela API.
 
-### 3. Criar talhão
+### 4. Criar talhão
 
 Endpoint:
 
@@ -174,7 +185,19 @@ JSON para enviar:
 }
 ```
 
-### 4. Criar satélite
+### 5. Listar equipamentos
+
+Endpoint:
+
+```http
+GET /api/equipamentos
+```
+
+Não precisa enviar JSON.
+
+Use esse endpoint para confirmar os IDs reais de satélite, drone e sensor IoT antes de registrar leituras.
+
+### 6. Criar satélite
 
 Endpoint:
 
@@ -196,7 +219,7 @@ JSON para enviar:
 
 Observação: se o código já existir, a API gera automaticamente um código único, como `SAT-002-2`.
 
-### 5. Criar drone
+### 7. Criar drone
 
 Endpoint:
 
@@ -218,7 +241,7 @@ JSON para enviar:
 
 Observação: se o código já existir, a API gera automaticamente um código único, como `DRN-002-2`.
 
-### 6. Criar sensor IoT
+### 8. Criar sensor IoT
 
 Endpoint:
 
@@ -239,19 +262,7 @@ JSON para enviar:
 
 Observação: se o código já existir, a API gera automaticamente um código único, como `IOT-002-2`.
 
-### 7. Listar equipamentos
-
-Endpoint:
-
-```http
-GET /api/equipamentos
-```
-
-Não precisa enviar JSON.
-
-Use esse endpoint para confirmar os IDs reais de satélite, drone e sensor IoT antes de registrar leituras.
-
-### 8. Registrar leitura de satélite com geração de alerta
+### 9. Registrar leitura de satélite com geração de alerta
 
 Endpoint:
 
@@ -273,7 +284,7 @@ JSON para enviar:
 
 Resultado esperado: a API retorna `alertasGerados` e cria alertas de seca/praga.
 
-### 9. Registrar leitura de sensor IoT
+### 10. Registrar leitura de sensor IoT
 
 Endpoint:
 
@@ -295,7 +306,7 @@ JSON para enviar:
 
 Resultado esperado: a API retorna `alertasGerados`.
 
-### 10. Registrar varredura do drone
+### 11. Registrar varredura do drone
 
 Endpoint:
 
@@ -317,7 +328,7 @@ JSON para enviar:
 
 Resultado esperado: a API retorna `alertasGerados`.
 
-### 11. Listar alertas
+### 12. Listar alertas
 
 Endpoint:
 
@@ -327,7 +338,7 @@ GET /api/alertas
 
 Não precisa enviar JSON.
 
-### 12. Consultar dashboard
+### 13. Consultar dashboard
 
 Endpoint:
 
@@ -337,7 +348,7 @@ GET /api/dashboard/1
 
 Não precisa enviar JSON.
 
-### 13. Gerar relatório semanal
+### 14. Gerar relatório semanal
 
 Endpoint:
 
@@ -353,59 +364,51 @@ Além do código, a entrega deve mostrar que a API foi executada. As evidências
 
 ### Prints obrigatórios recomendados
 
-1. **Terminal com a API rodando**
-   - Mostrar o comando `dotnet run`.
-   - Mostrar a URL local, por exemplo `http://localhost:5000`.
+1. **GET `/` ou Swagger aberto**
+   - Mostrar a tela `http://localhost:5000/swagger` ou o endpoint raiz redirecionando para o Swagger.
 
-2. **Swagger aberto**
-   - Mostrar a tela `http://localhost:5000/swagger`.
-   - A lista de endpoints deve aparecer.
-
-3. **GET `/api/fazendas`**
+2. **GET `/api/fazendas`**
    - Prova que o banco SQLite foi criado com seed inicial.
 
-4. **POST `/api/fazendas`**
+3. **POST `/api/fazendas`**
    - Prova que o cadastro de uma nova fazenda funciona.
 
-5. **POST `/api/fazendas/1/talhoes`**
+4. **POST `/api/fazendas/1/talhoes`**
    - Prova que o cadastro de talhão vinculado à fazenda funciona.
 
-6. **GET `/api/equipamentos`**
+5. **GET `/api/equipamentos`**
    - Prova que há satélite, drone e sensor IoT cadastrados.
 
-7. **POST `/api/equipamentos/satelites`**
+6. **POST `/api/equipamentos/satelites`**
    - Prova que o cadastro de satélite funciona.
 
-8. **POST `/api/equipamentos/drones`**
+7. **POST `/api/equipamentos/drones`**
    - Prova que o cadastro de drone funciona.
 
-9. **POST `/api/equipamentos/sensores-iot`**
+8. **POST `/api/equipamentos/sensores-iot`**
    - Prova que o cadastro de sensor IoT funciona.
 
-10. **POST `/api/monitoramento/leituras-satelite`**
-    - Usar o JSON do item 8.
+9. **POST `/api/monitoramento/leituras-satelite`**
+   - Mostrar `alertasGerados` no retorno.
+
+10. **POST `/api/monitoramento/leituras-sensor`**
     - Mostrar `alertasGerados` no retorno.
 
-11. **POST `/api/monitoramento/leituras-sensor`**
-    - Usar o JSON do item 9.
+11. **POST `/api/monitoramento/varreduras-drone`**
     - Mostrar `alertasGerados` no retorno.
 
-12. **POST `/api/monitoramento/varreduras-drone`**
-    - Usar o JSON do item 10.
-    - Mostrar `alertasGerados` no retorno.
-
-13. **GET `/api/alertas`**
+12. **GET `/api/alertas`**
     - Mostrar os alertas criados automaticamente.
 
-14. **GET `/api/dashboard/1`**
+13. **GET `/api/dashboard/1`**
     - Mostrar o painel consolidado da fazenda.
 
-15. **POST `/api/relatorios/semanal/1`**
+14. **POST `/api/relatorios/semanal/1`**
     - Mostrar o relatório semanal gerado.
 
 ### Ordem recomendada para os prints ou vídeo
 
-1. Abrir o Swagger.
+1. Executar `GET /` ou abrir o Swagger.
 2. Executar `GET /api/fazendas`.
 3. Executar `POST /api/fazendas`.
 4. Executar `POST /api/fazendas/1/talhoes`.
