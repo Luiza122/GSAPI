@@ -205,12 +205,21 @@ Endpoint: `POST /api/fazendas/1/talhoes`
 
 ```mermaid
 flowchart TD
-    A[Satélite NASA/INPE] --> B[API AgroOrbit]
+    A[Satélite / Dados Orbitais] --> B[ASP.NET Core Web API]
     C[Sensores IoT] --> B
     D[Drone com rota programada] --> B
-    B --> E[(Banco SQLite)]
-    B --> F[Serviço de Alertas]
-    F --> G[Dashboard]
-    F --> H[Relatório Semanal]
-    G --> I[Celular ou Computador]
+
+    B --> E[Serviços de Aplicação]
+    E --> F[AlertaService]
+    E --> G[DashboardService]
+    E --> H[RelatorioService]
+
+    F --> I[(SQLite / Entity Framework Core)]
+    G --> I
+    H --> I
+
+    G --> J[Dashboard da Fazenda]
+    H --> K[Relatório Semanal]
+    J --> L[Usuário pelo Celular ou Computador]
+    K --> L
 ```
