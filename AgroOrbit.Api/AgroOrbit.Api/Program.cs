@@ -84,8 +84,9 @@ app.MapPost("/api/equipamentos/satelites", async (CriarSateliteRequest r, AgroDb
     var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
     if (fazenda == null)
         throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
-    
-    var satelite = new Satelite(r.Nome, r.Codigo, r.FazendaId, r.ProvedorImagem, r.RevisitaHoras);
+
+    var codigoUnico = await CodigoHelper.GerarCodigoUnicoAsync(db, r.Codigo);
+    var satelite = new Satelite(r.Nome, codigoUnico, r.FazendaId, r.ProvedorImagem, r.RevisitaHoras);
     db.Equipamentos.Add(satelite);
     await db.SaveChangesAsync();
     return Results.Created($"/api/equipamentos/satelites/{satelite.Id}", 
@@ -97,8 +98,9 @@ app.MapPost("/api/equipamentos/drones", async (CriarDroneRequest r, AgroDbContex
     var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
     if (fazenda == null)
         throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
-    
-    var drone = new Drone(r.Nome, r.Codigo, r.FazendaId, r.AutonomiaMinutos, r.RotaPadrao);
+
+    var codigoUnico = await CodigoHelper.GerarCodigoUnicoAsync(db, r.Codigo);
+    var drone = new Drone(r.Nome, codigoUnico, r.FazendaId, r.AutonomiaMinutos, r.RotaPadrao);
     db.Equipamentos.Add(drone);
     await db.SaveChangesAsync();
     return Results.Created($"/api/equipamentos/drones/{drone.Id}", 
@@ -110,8 +112,9 @@ app.MapPost("/api/equipamentos/sensores-iot", async (CriarSensorIotRequest r, Ag
     var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
     if (fazenda == null)
         throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
-    
-    var sensor = new SensorIot(r.Nome, r.Codigo, r.FazendaId, r.GrandezaMonitorada);
+
+    var codigoUnico = await CodigoHelper.GerarCodigoUnicoAsync(db, r.Codigo);
+    var sensor = new SensorIot(r.Nome, codigoUnico, r.FazendaId, r.GrandezaMonitorada);
     db.Equipamentos.Add(sensor);
     await db.SaveChangesAsync();
     return Results.Created($"/api/equipamentos/sensores-iot/{sensor.Id}", 
