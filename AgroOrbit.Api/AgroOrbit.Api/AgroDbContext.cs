@@ -28,10 +28,6 @@ public class AgroDbContext : DbContext
             .HasValue<Drone>(TipoEquipamento.Drone)
             .HasValue<SensorIot>(TipoEquipamento.SensorIot);
 
-        modelBuilder.Entity<EquipamentoMonitoramento>()
-            .HasIndex(e => e.Codigo)
-            .IsUnique();
-
         modelBuilder.Entity<Fazenda>().Property(f => f.AreaHectares).HasPrecision(12, 2);
         modelBuilder.Entity<Talhao>().Property(t => t.AreaHectares).HasPrecision(12, 2);
         modelBuilder.Entity<LeituraSatelite>().Property(l => l.IndiceSaude).HasPrecision(5, 2);
