@@ -201,10 +201,6 @@ Endpoint: `POST /api/fazendas/1/talhoes`
 }
 ```
 
-## Observação
-
-Antes de registrar leituras, consulte `GET /api/equipamentos` para confirmar os IDs reais de satélite, drone e sensor IoT cadastrados no banco local.
-
 ## Diagrama de arquitetura
 
 ```mermaid
