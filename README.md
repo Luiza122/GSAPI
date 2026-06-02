@@ -79,11 +79,22 @@ Ao iniciar a API, o banco SQLite é criado automaticamente com dados de teste:
 
 - `fazendaId`: 1
 - `talhaoId`: 1
+- existe uma fazenda inicial chamada **Fazenda Horizonte Verde**;
+- existem equipamentos iniciais do tipo **Drone**, **Satelite** e **SensorIot**.
+
+Antes de testar leituras de satélite, sensor ou drone, execute:
+
+```http
+GET /api/equipamentos
+```
+
+Use o `id` que aparecer no retorno para cada tipo de equipamento. Nos exemplos abaixo foram usados os IDs que apareceram na execução local dos prints:
+
 - `sateliteId`: 1
 - `droneId`: 2
 - `sensorIotId`: 3
 
-Use esses IDs nos testes do Swagger.
+Caso no seu banco local apareça outro ID, substitua no JSON pelo ID exibido no `GET /api/equipamentos`.
 
 ## Endpoints principais
 
@@ -183,6 +194,8 @@ JSON para enviar:
 }
 ```
 
+Observação: se o código já existir, a API gera automaticamente um código único, como `SAT-002-2`.
+
 ### 5. Criar drone
 
 Endpoint:
@@ -203,6 +216,8 @@ JSON para enviar:
 }
 ```
 
+Observação: se o código já existir, a API gera automaticamente um código único, como `DRN-002-2`.
+
 ### 6. Criar sensor IoT
 
 Endpoint:
@@ -222,6 +237,8 @@ JSON para enviar:
 }
 ```
 
+Observação: se o código já existir, a API gera automaticamente um código único, como `IOT-002-2`.
+
 ### 7. Listar equipamentos
 
 Endpoint:
@@ -231,6 +248,8 @@ GET /api/equipamentos
 ```
 
 Não precisa enviar JSON.
+
+Use esse endpoint para confirmar os IDs reais de satélite, drone e sensor IoT antes de registrar leituras.
 
 ### 8. Registrar leitura de satélite com geração de alerta
 
@@ -345,33 +364,63 @@ Além do código, a entrega deve mostrar que a API foi executada. As evidências
 3. **GET `/api/fazendas`**
    - Prova que o banco SQLite foi criado com seed inicial.
 
-4. **GET `/api/equipamentos`**
+4. **POST `/api/fazendas`**
+   - Prova que o cadastro de uma nova fazenda funciona.
+
+5. **POST `/api/fazendas/1/talhoes`**
+   - Prova que o cadastro de talhão vinculado à fazenda funciona.
+
+6. **GET `/api/equipamentos`**
    - Prova que há satélite, drone e sensor IoT cadastrados.
 
-5. **POST `/api/monitoramento/leituras-satelite`**
-   - Usar o JSON do item 8.
-   - Mostrar `alertasGerados` no retorno.
+7. **POST `/api/equipamentos/satelites`**
+   - Prova que o cadastro de satélite funciona.
 
-6. **GET `/api/alertas`**
-   - Mostrar os alertas criados automaticamente.
+8. **POST `/api/equipamentos/drones`**
+   - Prova que o cadastro de drone funciona.
 
-7. **GET `/api/dashboard/1`**
-   - Mostrar o painel consolidado da fazenda.
+9. **POST `/api/equipamentos/sensores-iot`**
+   - Prova que o cadastro de sensor IoT funciona.
 
-8. **POST `/api/relatorios/semanal/1`**
-   - Mostrar o relatório semanal gerado.
+10. **POST `/api/monitoramento/leituras-satelite`**
+    - Usar o JSON do item 8.
+    - Mostrar `alertasGerados` no retorno.
+
+11. **POST `/api/monitoramento/leituras-sensor`**
+    - Usar o JSON do item 9.
+    - Mostrar `alertasGerados` no retorno.
+
+12. **POST `/api/monitoramento/varreduras-drone`**
+    - Usar o JSON do item 10.
+    - Mostrar `alertasGerados` no retorno.
+
+13. **GET `/api/alertas`**
+    - Mostrar os alertas criados automaticamente.
+
+14. **GET `/api/dashboard/1`**
+    - Mostrar o painel consolidado da fazenda.
+
+15. **POST `/api/relatorios/semanal/1`**
+    - Mostrar o relatório semanal gerado.
 
 ### Ordem recomendada para os prints ou vídeo
 
 1. Abrir o Swagger.
 2. Executar `GET /api/fazendas`.
-3. Executar `GET /api/equipamentos`.
-4. Executar `POST /api/monitoramento/leituras-satelite`.
-5. Executar `GET /api/alertas`.
-6. Executar `GET /api/dashboard/1`.
-7. Executar `POST /api/relatorios/semanal/1`.
+3. Executar `POST /api/fazendas`.
+4. Executar `POST /api/fazendas/1/talhoes`.
+5. Executar `GET /api/equipamentos`.
+6. Executar `POST /api/equipamentos/satelites`.
+7. Executar `POST /api/equipamentos/drones`.
+8. Executar `POST /api/equipamentos/sensores-iot`.
+9. Executar `POST /api/monitoramento/leituras-satelite`.
+10. Executar `POST /api/monitoramento/leituras-sensor`.
+11. Executar `POST /api/monitoramento/varreduras-drone`.
+12. Executar `GET /api/alertas`.
+13. Executar `GET /api/dashboard/1`.
+14. Executar `POST /api/relatorios/semanal/1`.
 
-Essa sequência mostra o fluxo completo: dados iniciais, monitoramento por satélite, geração de alerta, dashboard e relatório.
+Essa sequência mostra o fluxo completo: dados iniciais, cadastros, monitoramento por satélite, IoT, drone, geração de alerta, dashboard e relatório.
 
 ## Diagrama de arquitetura
 
