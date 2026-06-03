@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using AgroOrbit.Api;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -66,11 +66,10 @@ app.MapGet("/api/fazendas/{id:int}", async (int id, AgroDbContext db) =>
     var fazenda = await db.Fazendas.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
 
     return fazenda is null
-        ? Results.NotFound(new { mensagem = "Fazenda não encontrada." })
+        ? Results.NotFound(new { mensagem = "Fazenda nÃ£o encontrada." })
         : Results.Ok(fazenda);
 })
 .WithName("GetFazendaById")
-.WithOpenApi()
 .Produces<Fazenda>(200)
 .Produces(404);
 
@@ -88,11 +87,11 @@ app.MapPut("/api/fazendas/{id:int}", async (int id, CriarFazendaRequest r, AgroD
     var fazenda = await db.Fazendas.FindAsync(id);
 
     if (fazenda is null)
-        return Results.NotFound(new { mensagem = "Fazenda não encontrada." });
+        return Results.NotFound(new { mensagem = "Fazenda nÃ£o encontrada." });
 
     db.Entry(fazenda).Property(nameof(Fazenda.Nome)).CurrentValue = r.Nome.Trim();
-    db.Entry(fazenda).Property(nameof(Fazenda.Proprietario)).CurrentValue = string.IsNullOrWhiteSpace(r.Proprietario) ? "Não informado" : r.Proprietario.Trim();
-    db.Entry(fazenda).Property(nameof(Fazenda.Cidade)).CurrentValue = string.IsNullOrWhiteSpace(r.Cidade) ? "Não informada" : r.Cidade.Trim();
+    db.Entry(fazenda).Property(nameof(Fazenda.Proprietario)).CurrentValue = string.IsNullOrWhiteSpace(r.Proprietario) ? "NÃ£o informado" : r.Proprietario.Trim();
+    db.Entry(fazenda).Property(nameof(Fazenda.Cidade)).CurrentValue = string.IsNullOrWhiteSpace(r.Cidade) ? "NÃ£o informada" : r.Cidade.Trim();
     db.Entry(fazenda).Property(nameof(Fazenda.Estado)).CurrentValue = string.IsNullOrWhiteSpace(r.Estado) ? "SP" : r.Estado.Trim().ToUpper();
     db.Entry(fazenda).Property(nameof(Fazenda.AreaHectares)).CurrentValue = r.AreaHectares;
 
@@ -101,7 +100,6 @@ app.MapPut("/api/fazendas/{id:int}", async (int id, CriarFazendaRequest r, AgroD
     return Results.Ok(fazenda);
 })
 .WithName("UpdateFazenda")
-.WithOpenApi()
 .Produces<Fazenda>(200)
 .Produces(404);
 
@@ -110,7 +108,7 @@ app.MapDelete("/api/fazendas/{id:int}", async (int id, AgroDbContext db) =>
     var fazenda = await db.Fazendas.FindAsync(id);
 
     if (fazenda is null)
-        return Results.NotFound(new { mensagem = "Fazenda não encontrada." });
+        return Results.NotFound(new { mensagem = "Fazenda nÃ£o encontrada." });
 
     db.Fazendas.Remove(fazenda);
     await db.SaveChangesAsync();
@@ -118,11 +116,10 @@ app.MapDelete("/api/fazendas/{id:int}", async (int id, AgroDbContext db) =>
     return Results.NoContent();
 })
 .WithName("DeleteFazenda")
-.WithOpenApi()
 .Produces(204)
 .Produces(404);
 
-// CRUD - Talhões
+// CRUD - TalhÃµes
 app.MapGet("/api/fazendas/{fazendaId:int}/talhoes", async (int fazendaId, AgroDbContext db) =>
 {
     var talhoes = await db.Talhoes
@@ -138,11 +135,10 @@ app.MapGet("/api/talhoes/{id:int}", async (int id, AgroDbContext db) =>
     var talhao = await db.Talhoes.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
 
     return talhao is null
-        ? Results.NotFound(new { mensagem = "Talhão não encontrado." })
+        ? Results.NotFound(new { mensagem = "TalhÃ£o nÃ£o encontrado." })
         : Results.Ok(talhao);
 })
 .WithName("GetTalhaoById")
-.WithOpenApi()
 .Produces<Talhao>(200)
 .Produces(404);
 
@@ -151,7 +147,7 @@ app.MapPost("/api/fazendas/{fazendaId:int}/talhoes", async (int fazendaId, Criar
     var fazenda = await db.Fazendas.FindAsync(fazendaId);
 
     if (fazenda is null)
-        throw new RecursoNaoEncontradoException($"Fazenda {fazendaId} não encontrada.");
+        throw new RecursoNaoEncontradoException($"Fazenda {fazendaId} nÃ£o encontrada.");
 
     var talhao = new Talhao(r.Nome, r.Cultura, r.AreaHectares, r.Latitude, r.Longitude, fazendaId);
     db.Talhoes.Add(talhao);
@@ -165,10 +161,10 @@ app.MapPut("/api/talhoes/{id:int}", async (int id, CriarTalhaoRequest r, AgroDbC
     var talhao = await db.Talhoes.FindAsync(id);
 
     if (talhao is null)
-        return Results.NotFound(new { mensagem = "Talhão não encontrado." });
+        return Results.NotFound(new { mensagem = "TalhÃ£o nÃ£o encontrado." });
 
     db.Entry(talhao).Property(nameof(Talhao.Nome)).CurrentValue = r.Nome.Trim();
-    db.Entry(talhao).Property(nameof(Talhao.Cultura)).CurrentValue = string.IsNullOrWhiteSpace(r.Cultura) ? "Não informada" : r.Cultura.Trim();
+    db.Entry(talhao).Property(nameof(Talhao.Cultura)).CurrentValue = string.IsNullOrWhiteSpace(r.Cultura) ? "NÃ£o informada" : r.Cultura.Trim();
     db.Entry(talhao).Property(nameof(Talhao.AreaHectares)).CurrentValue = r.AreaHectares;
     db.Entry(talhao).Property(nameof(Talhao.Latitude)).CurrentValue = r.Latitude;
     db.Entry(talhao).Property(nameof(Talhao.Longitude)).CurrentValue = r.Longitude;
@@ -179,7 +175,6 @@ app.MapPut("/api/talhoes/{id:int}", async (int id, CriarTalhaoRequest r, AgroDbC
     return Results.Ok(talhao);
 })
 .WithName("UpdateTalhao")
-.WithOpenApi()
 .Produces<Talhao>(200)
 .Produces(404);
 
@@ -188,7 +183,7 @@ app.MapDelete("/api/talhoes/{id:int}", async (int id, AgroDbContext db) =>
     var talhao = await db.Talhoes.FindAsync(id);
 
     if (talhao is null)
-        return Results.NotFound(new { mensagem = "Talhão não encontrado." });
+        return Results.NotFound(new { mensagem = "TalhÃ£o nÃ£o encontrado." });
 
     db.Talhoes.Remove(talhao);
     await db.SaveChangesAsync();
@@ -196,7 +191,6 @@ app.MapDelete("/api/talhoes/{id:int}", async (int id, AgroDbContext db) =>
     return Results.NoContent();
 })
 .WithName("DeleteTalhao")
-.WithOpenApi()
 .Produces(204)
 .Produces(404);
 
@@ -220,7 +214,7 @@ app.MapGet("/api/equipamentos/{id:int}", async (int id, AgroDbContext db) =>
     var equipamento = await db.Equipamentos.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
     return equipamento is null
-        ? Results.NotFound(new { mensagem = "Equipamento não encontrado." })
+        ? Results.NotFound(new { mensagem = "Equipamento nÃ£o encontrado." })
         : Results.Ok(new EquipamentoResponse(
             equipamento.Id,
             equipamento.Nome,
@@ -231,7 +225,6 @@ app.MapGet("/api/equipamentos/{id:int}", async (int id, AgroDbContext db) =>
         ));
 })
 .WithName("GetEquipamentoById")
-.WithOpenApi()
 .Produces<EquipamentoResponse>(200)
 .Produces(404);
 
@@ -240,7 +233,7 @@ app.MapPost("/api/equipamentos/satelites", async (CriarSateliteRequest r, AgroDb
     var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
 
     if (fazenda is null)
-        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
+        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} nÃ£o encontrada.");
 
     var codigoUnico = await CodigoHelper.GerarCodigoUnicoAsync(db, r.Codigo);
     var satelite = new Satelite(r.Nome, codigoUnico, r.FazendaId, r.ProvedorImagem, r.RevisitaHoras);
@@ -263,7 +256,7 @@ app.MapPost("/api/equipamentos/drones", async (CriarDroneRequest r, AgroDbContex
     var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
 
     if (fazenda is null)
-        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
+        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} nÃ£o encontrada.");
 
     var codigoUnico = await CodigoHelper.GerarCodigoUnicoAsync(db, r.Codigo);
     var drone = new Drone(r.Nome, codigoUnico, r.FazendaId, r.AutonomiaMinutos, r.RotaPadrao);
@@ -286,7 +279,7 @@ app.MapPost("/api/equipamentos/sensores-iot", async (CriarSensorIotRequest r, Ag
     var fazenda = await db.Fazendas.FindAsync(r.FazendaId);
 
     if (fazenda is null)
-        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} não encontrada.");
+        throw new RecursoNaoEncontradoException($"Fazenda {r.FazendaId} nÃ£o encontrada.");
 
     var codigoUnico = await CodigoHelper.GerarCodigoUnicoAsync(db, r.Codigo);
     var sensor = new SensorIot(r.Nome, codigoUnico, r.FazendaId, r.GrandezaMonitorada);
@@ -309,7 +302,7 @@ app.MapPut("/api/equipamentos/{id:int}/status/{status}", async (int id, StatusEq
     var equipamento = await db.Equipamentos.FindAsync(id);
 
     if (equipamento is null)
-        return Results.NotFound(new { mensagem = "Equipamento não encontrado." });
+        return Results.NotFound(new { mensagem = "Equipamento nÃ£o encontrado." });
 
     db.Entry(equipamento)
         .Property(nameof(EquipamentoMonitoramento.Status))
@@ -332,7 +325,7 @@ app.MapDelete("/api/equipamentos/{id:int}", async (int id, AgroDbContext db) =>
     var equipamento = await db.Equipamentos.FindAsync(id);
 
     if (equipamento is null)
-        return Results.NotFound(new { mensagem = "Equipamento não encontrado." });
+        return Results.NotFound(new { mensagem = "Equipamento nÃ£o encontrado." });
 
     db.Equipamentos.Remove(equipamento);
     await db.SaveChangesAsync();
@@ -340,7 +333,6 @@ app.MapDelete("/api/equipamentos/{id:int}", async (int id, AgroDbContext db) =>
     return Results.NoContent();
 })
 .WithName("DeleteEquipamento")
-.WithOpenApi()
 .Produces(204)
 .Produces(404);
 
@@ -391,7 +383,7 @@ app.MapPost("/api/monitoramento/varreduras-drone", async (CriarVarreduraDroneReq
     });
 });
 
-// Consulta e relatórios
+// Consulta e relatÃ³rios
 app.MapGet("/api/alertas", async (AgroDbContext db) =>
     Results.Ok(await db.Alertas.AsNoTracking().OrderByDescending(a => a.GeradoEmUtc).ToListAsync()));
 
