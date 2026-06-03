@@ -89,18 +89,28 @@ Caso outra porta seja exibida no terminal, utilize a URL indicada pelo `dotnet r
 |---|---|---|---|
 | 1 | GET | `/` | Redireciona para o Swagger |
 | 2 | GET | `/api/fazendas` | Lista fazendas |
-| 3 | POST | `/api/fazendas` | Cadastra fazenda |
-| 4 | POST | `/api/fazendas/{fazendaId}/talhoes` | Cadastra talhão |
-| 5 | GET | `/api/equipamentos` | Lista equipamentos |
-| 6 | POST | `/api/equipamentos/satelites` | Cadastra satélite |
-| 7 | POST | `/api/equipamentos/drones` | Cadastra drone |
-| 8 | POST | `/api/equipamentos/sensores-iot` | Cadastra sensor IoT |
-| 9 | POST | `/api/monitoramento/leituras-satelite` | Registra leitura de satélite |
-| 10 | POST | `/api/monitoramento/leituras-sensor` | Registra leitura de sensor |
-| 11 | POST | `/api/monitoramento/varreduras-drone` | Registra varredura de drone |
-| 12 | GET | `/api/alertas` | Lista alertas |
-| 13 | GET | `/api/dashboard/{fazendaId}` | Consulta dashboard |
-| 14 | POST | `/api/relatorios/semanal/{fazendaId}` | Gera relatório semanal |
+| 3 | GET | `/api/fazendas/{id}` | Busca uma fazenda por ID |
+| 4 | POST | `/api/fazendas` | Cadastra fazenda |
+| 5 | PUT | `/api/fazendas/{id}` | Atualiza uma fazenda |
+| 6 | DELETE | `/api/fazendas/{id}` | Deleta uma fazenda |
+| 7 | GET | `/api/fazendas/{fazendaId}/talhoes` | Lista talhões de uma fazenda |
+| 8 | GET | `/api/talhoes/{id}` | Busca um talhão por ID |
+| 9 | POST | `/api/fazendas/{fazendaId}/talhoes` | Cadastra talhão |
+| 10 | PUT | `/api/talhoes/{id}` | Atualiza um talhão |
+| 11 | DELETE | `/api/talhoes/{id}` | Deleta um talhão |
+| 12 | GET | `/api/equipamentos` | Lista equipamentos |
+| 13 | GET | `/api/equipamentos/{id}` | Busca um equipamento por ID |
+| 14 | POST | `/api/equipamentos/satelites` | Cadastra satélite |
+| 15 | POST | `/api/equipamentos/drones` | Cadastra drone |
+| 16 | POST | `/api/equipamentos/sensores-iot` | Cadastra sensor IoT |
+| 17 | PUT | `/api/equipamentos/{id}/status/{status}` | Atualiza status de um equipamento |
+| 18 | DELETE | `/api/equipamentos/{id}` | Deleta um equipamento |
+| 19 | POST | `/api/monitoramento/leituras-satelite` | Registra leitura de satélite |
+| 20 | POST | `/api/monitoramento/leituras-sensor` | Registra leitura de sensor |
+| 21 | POST | `/api/monitoramento/varreduras-drone` | Registra varredura de drone |
+| 22 | GET | `/api/alertas` | Lista alertas |
+| 23 | GET | `/api/dashboard/{fazendaId}` | Consulta dashboard |
+| 24 | POST | `/api/relatorios/semanal/{fazendaId}` | Gera relatório semanal |
 
 ## Exemplos de requisição
 
@@ -200,6 +210,58 @@ Endpoint: `POST /api/fazendas/1/talhoes`
   "capturadoEmUtc": "2026-06-08T12:00:00Z"
 }
 ```
+
+### Atualizar fazenda
+
+Endpoint: `PUT /api/fazendas/1`
+
+```json
+{
+  "nome": "Fazenda Santa Clara Atualizada",
+  "proprietario": "AgroTech Brasil Ltda.",
+  "cidade": "Barretos",
+  "estado": "SP",
+  "areaHectares": 900
+}
+```
+
+### Atualizar talhão
+
+Endpoint: `PUT /api/talhoes/1`
+
+```json
+{
+  "nome": "Talhão Leste Expandido",
+  "cultura": "Café Arábica",
+  "areaHectares": 150,
+  "latitude": -21.1701,
+  "longitude": -47.8103
+}
+```
+
+### Atualizar status de equipamento
+
+Endpoint: `PUT /api/equipamentos/1/status/EmManutencao`
+
+Os status válidos são: `Ativo`, `EmManutencao`, `Inativo`
+
+### Deletar fazenda
+
+Endpoint: `DELETE /api/fazendas/1`
+
+Retorna 204 (No Content) se sucesso, ou 404 se não encontrada.
+
+### Deletar talhão
+
+Endpoint: `DELETE /api/talhoes/1`
+
+Retorna 204 (No Content) se sucesso, ou 404 se não encontrado.
+
+### Deletar equipamento
+
+Endpoint: `DELETE /api/equipamentos/1`
+
+Retorna 204 (No Content) se sucesso, ou 404 se não encontrado.
 
 ## Diagrama de arquitetura
 
