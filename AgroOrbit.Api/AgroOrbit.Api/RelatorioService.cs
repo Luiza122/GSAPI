@@ -24,7 +24,16 @@ public class RelatorioService : IRelatorioService
 
         var talhaoIds = await _db.Talhoes.Where(t => t.FazendaId == fazendaId).Select(t => t.Id).ToListAsync();
         var totalAlertas = await _db.Alertas.CountAsync(a => a.FazendaId == fazendaId && a.GeradoEmUtc >= inicioUtc && a.GeradoEmUtc <= fimUtc);
-        var mediaSaude = await _db.LeiturasSatelite.Where(l => talhaoIds.Contains(l.TalhaoId) && l.CapturadoEmUtc >= inicioUtc && l.CapturadoEmUtc <= fimUtc).Select(l => (decimal?)l.IndiceSaude).AverageAsync() ?? 0m;
+
+        var indicesSaude = await _db.LeiturasSatelite
+            .Where(l => talhaoIds.Contains(l.TalhaoId) && l.CapturadoEmUtc >= inicioUtc && l.CapturadoEmUtc <= fimUtc)
+            .Select(l => l.IndiceSaude)
+            .ToListAsync();
+
+        var mediaSaude = indicesSaude.Any()
+            ? indicesSaude.Average()
+            : 0m;
+
         var resumo = $"No periodo analisado, a fazenda apresentou {totalAlertas} alerta(s) e media de saude {mediaSaude:N2}.";
 
         var relatorio = new RelatorioSemanal(fazendaId, inicioUtc, fimUtc, totalAlertas, Math.Round(mediaSaude, 2), resumo);
