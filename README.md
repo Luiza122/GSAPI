@@ -608,12 +608,15 @@ flowchart TD
     E --> G[DashboardService]
     E --> H[RelatorioService]
 
-    F --> I[(SQLite / Entity Framework Core)]
+    F --> I[AgroDbContext / EF Core]
     G --> I
     H --> I
 
-    G --> J[Dashboard da Fazenda]
-    H --> K[Relatório Semanal]
-    J --> L[Usuário pelo Celular ou Computador]
-    K --> L
+    I --> J[(SQLite)]
+
+    G --> K[Dashboard da Fazenda]
+    H --> L[Relatório Semanal]
+
+    K --> M[Usuário pelo Celular ou Computador]
+    L --> M
 ```
