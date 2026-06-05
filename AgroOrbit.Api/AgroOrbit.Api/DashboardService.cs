@@ -31,7 +31,17 @@ public class DashboardService : IDashboardService
         }
 
         var ids = talhoes.Select(t => t.Id).ToList();
-        var media = await _db.LeiturasSatelite.AsNoTracking().Where(l => ids.Contains(l.TalhaoId)).Select(l => (decimal?)l.IndiceSaude).AverageAsync() ?? 0m;
+
+        var indicesSaude = await _db.LeiturasSatelite
+            .AsNoTracking()
+            .Where(l => ids.Contains(l.TalhaoId))
+            .Select(l => l.IndiceSaude)
+            .ToListAsync();
+
+        var media = indicesSaude.Any()
+            ? indicesSaude.Average()
+            : 0m;
+
         var abertos = await _db.Alertas.AsNoTracking().CountAsync(a => a.FazendaId == fazendaId && a.Status != StatusAlerta.Resolvido);
         var ultimos = await _db.Alertas.AsNoTracking().Where(a => a.FazendaId == fazendaId).OrderByDescending(a => a.GeradoEmUtc).Take(5).Select(a => new AlertaResumoResponse(a.Id, a.Tipo.ToString(), a.Nivel.ToString(), a.Status.ToString(), a.Mensagem, a.GeradoEmUtc)).ToListAsync();
 
